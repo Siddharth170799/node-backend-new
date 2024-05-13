@@ -6,7 +6,7 @@ const toDoSchema2= new mongoose.Schema({
     LastName:{type:String,required:false,unique:false},
     Email:{type:String,required:false,unique:false},
     Password:{type:String,required:false,unique:false},
-    ToDOs:{type:Array,required:false,unique:false}
+  
   })
 
 

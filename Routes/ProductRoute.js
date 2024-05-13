@@ -9,6 +9,7 @@ async function authenticateUser(Email, Password) {
 const user = await ToDo2.findOne({ Email: Email, Password: Password });
   return user;
 }
+
 router.post(
   "/todo",
   expressAsyncHandler(async (req, res) => {
@@ -24,16 +25,32 @@ router.post(
   })
 );
 
+router.post("/decoded",async(req,res)=>{
+
+  const {id}=req.body
+  console.log(id)
+  let array=[]
+  if(userId===id){
+    array.push({text})
+  }
+
+})
+
+
+
+
 router.post(
   "/signup",
   expressAsyncHandler(async (req, res) => {
     try {
-      const { FirstName, LastName, Email, Password } = req.body;
+      const { FirstName, LastName, Email, Password,input1 } = req.body;
+      console.log(input1)
       const userSignUpDetails = new ToDo2({
         FirstName: FirstName,
         LastName: LastName,
         Email: Email,
         Password: Password,
+        
       });
       const details2 = await userSignUpDetails.save();
       res.send({
@@ -47,6 +64,19 @@ router.post(
     }
   })
 );
+// router.post('/newTodo',async(req,res)=>{
+//   const {text}=req.body
+//   console.log(text)
+//   const details= new ToDo2({
+//     ToDOs: text
+//   })
+
+//   const details2=await details.save()
+//   res.send({message:"todos sent successffully",data:details2,status:200})
+// })
+
+
+
 router.post(
   "/signin",
   expressAsyncHandler(async (req, res) => {
@@ -62,21 +92,6 @@ router.post(
     }
   })
 );
-router.get("/todo1",  expressAsyncHandler(async (req, res) => {
-  try {
-    console.log('hello')
-    const token = req.headers.authorization;
-    console.log(token) 
-    const userName = jwt.decode(token); 
-    console.log(userName)
-    const todoItems = await Todo.find({_id:userName._id});
-    res.send(todoItems.ToDOs);
-  } catch (error) {
-    console.error("Error fetching todo items:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}));
-
 
 router.get("/todo", async (req, res) => {
   try {
