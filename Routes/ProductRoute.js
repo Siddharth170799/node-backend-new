@@ -14,8 +14,10 @@ router.post(
   "/todo",
   expressAsyncHandler(async (req, res) => {
     try {
+      let token=req.headers.authorization;
+      let TokenResult=jwt.verify(token,"your_secret_key");
       const toDoItems = req.body.text;
-      const toDoItems2 = new Todo({ text: toDoItems });
+      const toDoItems2 = new Todo({ text: toDoItems,UserID:TokenResult.userId});
       const toDoItems3 = await toDoItems2.save();
       res.send({ message: "to do item added", data: toDoItems3, status: 200 });
     } catch (err) {
@@ -25,16 +27,7 @@ router.post(
   })
 );
 
-router.post("/decoded",async(req,res)=>{
 
-  const {id}=req.body
-  console.log(id)
-  let array=[]
-  if(userId===id){
-    array.push({text})
-  }
-
-})
 
 
 
@@ -94,10 +87,15 @@ router.post(
 );
 
 router.get("/todo", async (req, res) => {
+  // let token= req.headers.authorization;
+  // let TokenResult=jwt.verify(token,"Shh");
+  // let userTaskData= Todo.find({UserID:TokenResult.userId})
   try {
-    const todoItems = await Todo.find();
+    let token= req.headers.authorization;
+  let TokenResult=jwt.verify(token,"your_secret_key");
+   let userTaskData=await Todo.find({UserID:TokenResult.userId})
  
-    res.send(todoItems);
+    res.send(userTaskData);
   } catch (error) {
     console.error("Error fetching todo items:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -116,7 +114,7 @@ router.delete("/todo/:id", async (req, res) => {
 router.put("/todo/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await Todo.findByIdAndUpdate(id);
+    await Todo.findByIdAndUpdate(id,req.body);
     res.send({ message: "todo item updated successfully" });
   } catch (err) {
     console.log(err, "error occurred");

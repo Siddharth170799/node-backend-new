@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 app.use(cors()); 
 app.use('/api',router)
 
-
-mongoose.connect('mongodb://localhost:27017/xdp')
+let uri ="mongodb+srv://boorgusiddharth:siddharthjuly99@siddharth.fiuilki.mongodb.net/?retryWrites=true&w=majority&appName=Siddharth";
+mongoose.connect(uri)
 .then(()=>{
     console.log("DB connected")
 })
